@@ -5,7 +5,7 @@ const deceleration := 10
 const acceleration := 50
 
 var bullet = preload("uid://c7uqco4biuu2g")
-var shot_cooldown_seconds = 0.25
+var shot_cooldown_seconds = 0.35
 var time_since_last_shot = 0
 
 func _physics_process(delta: float) -> void:
