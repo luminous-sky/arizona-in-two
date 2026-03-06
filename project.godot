@@ -8,22 +8,21 @@
 
 config_version=5
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
 config/name="Arizona 2"
 run/main_scene="uid://85alntk1uqvy"
 config/features=PackedStringArray("4.6", "GL Compatibility")
-config/icon="res://assets/icon.svg"
+config/icon="res://icon.svg"
 
 [autoload]
 
 Gamestate="*uid://csimanntnbc8v"
 SceneSwitcher="*uid://coq5ooci1rwse"
-
-[display]
-[animation]
-
-compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [input]
 
@@ -78,8 +77,6 @@ Menu={
 3d/physics_engine="Jolt Physics"
 
 [rendering]
-[application]
 
-config/name="damage component"
-config/features=PackedStringArray("4.6", "Forward Plus")
-config/icon="res://icon.svg"
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
