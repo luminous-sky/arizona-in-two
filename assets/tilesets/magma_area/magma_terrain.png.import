@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cmntuj8512w3k"
-path="res://.godot/imported/quaver_unbeatable.jpg-8a92d15ca49ccaa74efc966324b4932c.ctex"
+uid="uid://dqvaigx2nv7to"
+path="res://.godot/imported/magma_terrain.png-b81abf816408dbb4381da0ecf9afce06.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/quaver_unbeatable.jpg"
-dest_files=["res://.godot/imported/quaver_unbeatable.jpg-8a92d15ca49ccaa74efc966324b4932c.ctex"]
+source_file="res://assets/tilesets/magma_area/magma_terrain.png"
+dest_files=["res://.godot/imported/magma_terrain.png-b81abf816408dbb4381da0ecf9afce06.ctex"]
 
 [params]
 
