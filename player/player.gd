@@ -1,10 +1,10 @@
 extends CharacterBody2D
 
-var speed = 100
-const deceleration := 10
-const acceleration := 50
+var speed: int = 70
+const deceleration: int = 10
+const acceleration: int = 50
 
-var bullet = preload("uid://c7uqco4biuu2g")
+const BULLET = preload("uid://c7uqco4biuu2g")
 var shot_cooldown_seconds = 0.35
 var time_since_last_shot = 0
 
@@ -62,21 +62,21 @@ func movement(delta):
 		velocity = lerp(velocity, Vector2(0, 0), delta * deceleration)
 
 func shoot(delta):
-	# Maps input to correct vector for velocity
-	var inputDir: Vector2 = Input.get_vector("ShootLeft", "ShootRight", "ShootUp", "ShootDown")
-	
+	# Check if can shoot
 	if time_since_last_shot < shot_cooldown_seconds:
 		time_since_last_shot += delta
 		return
+	# Maps input to correct vector for velocity
+	var inputDir: Vector2 = Input.get_vector("ShootLeft", "ShootRight", "ShootUp", "ShootDown")
 	
 	if inputDir:
 		
 		time_since_last_shot = 0
 		
-		var instance = bullet.instantiate()
+		var instance = BULLET.instantiate()
 		get_parent().add_child(instance)
 		
-		# Finds which direction
+		# sets bullet direction
 		instance.direction = inputDir
 		
 		instance.position = position

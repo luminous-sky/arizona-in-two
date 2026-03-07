@@ -1,14 +1,11 @@
 extends Control
 
-func _ready() -> void:
-	pass
-
 func _on_start_pressed() -> void:
-	var game: PackedScene = load("res://main/main.tscn")
+	var game: PackedScene = load("uid://cf8vbfpfm8jwn")
 	SceneSwitcher.switch_scene(game)
 
 func _on_settings_pressed() -> void:
-	var setting: PackedScene = load("res://Menu UI/settings.tscn")
+	var setting: PackedScene = load("uid://cyyylb4r6n4c")
 	SceneSwitcher.switch_scene(setting)
 
 func _on_quit_pressed() -> void:
