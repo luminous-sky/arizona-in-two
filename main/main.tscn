@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cf8vbfpfm8jwn"]
 
 [ext_resource type="PackedScene" uid="uid://tauxm8sc6ng2" path="res://player/player.tscn" id="1_53q0u"]
-[ext_resource type="PackedScene" uid="uid://g1pipfodhsk6" path="res://world/world.tscn" id="1_pjrb6"]
+[ext_resource type="Script" uid="uid://lbqjb3skgser" path="res://world/zone_manager.gd" id="1_c651c"]
 [ext_resource type="PackedScene" uid="uid://ctphcsxh0fik4" path="res://enemies/slime_enemy.tscn" id="3_xwkvk"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xwkvk"]
@@ -9,10 +9,17 @@ size = Vector2(52, 52)
 
 [node name="Main" type="Node2D" unique_id=1701778157]
 
-[node name="World" parent="." unique_id=510803854 instance=ExtResource("1_pjrb6")]
+[node name="ZoneManager" type="Node2D" parent="." unique_id=1871549057]
+script = ExtResource("1_c651c")
+starting_zone = &"zone_one"
+metadata/_custom_type_script = "uid://lbqjb3skgser"
 
 [node name="Player" parent="." unique_id=848334035 groups=["Player"] instance=ExtResource("1_53q0u")]
 position = Vector2(320, 328)
+
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=1897588027]
+position_smoothing_enabled = true
+position_smoothing_speed = 4.0
 
 [node name="SlimeEnemy" parent="." unique_id=538334106 node_paths=PackedStringArray("chase_area") instance=ExtResource("3_xwkvk")]
 position = Vector2(317, 198)
