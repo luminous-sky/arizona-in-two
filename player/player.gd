@@ -12,6 +12,10 @@ const BULLET = preload("uid://c7uqco4biuu2g")
 var shot_cooldown_seconds = 0.35
 var time_since_last_shot = 0
 
+var shotgun_powerup = false
+const SHOTGUN_SPREAD = PI/4 # spread per shot
+
+
 func _physics_process(delta: float) -> void:
 	movement(delta) # Movement function (Others can be added below)
 	
@@ -82,9 +86,27 @@ func shoot(delta):
 		
 		# sets bullet direction
 		instance.direction = inputDir
-		
 		instance.position = position
-		
 		instance.bulletBounce = shouldBounce
+    
+		if shotgun_powerup:
+			var bullet2 = BULLET.instantiate()
+			var bullet3 = BULLET.instantiate()
+			bullet2.direction = inputDir.rotated(SHOTGUN_SPREAD)
+			bullet3.direction = inputDir.rotated(-SHOTGUN_SPREAD)
+			bullet2.position = position
+			bullet3.position = position
+      bullet2.bulletBounce = shouldBounce
+      bullet3.bulletBounce = shouldBounce
+			get_parent().add_child(bullet2)
+			get_parent().add_child(bullet3)
 		
 		time_since_last_shot += delta
+
+func gain_powerup(power_name):
+	if power_name == "shotgun":
+		$ShotgunPowerTimer.start()
+		shotgun_powerup = true
+
+func _on_shotgun_power_timer_timeout():
+	shotgun_powerup = false

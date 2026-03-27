@@ -6,7 +6,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rkbax"]
 size = Vector2(16, 16)
 
-[node name="Player" type="CharacterBody2D" unique_id=848334035]
+[node name="Player" type="CharacterBody2D" unique_id=848334035 groups=["player"]]
 script = ExtResource("1_rkbax")
 
 [node name="Hitbox" type="CollisionShape2D" parent="." unique_id=135685977]
@@ -15,3 +15,9 @@ shape = SubResource("RectangleShape2D_rkbax")
 [node name="Sprite" type="Sprite2D" parent="." unique_id=572700105]
 scale = Vector2(0.125, 0.125)
 texture = ExtResource("1_oul6g")
+
+[node name="ShotgunPowerTimer" type="Timer" parent="." unique_id=273471058]
+wait_time = 10.0
+one_shot = true
+
+[connection signal="timeout" from="ShotgunPowerTimer" to="." method="_on_shotgun_power_timer_timeout"]
