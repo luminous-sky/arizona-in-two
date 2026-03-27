@@ -7,6 +7,7 @@ var speed: int = 70
 const deceleration: int = 10
 const acceleration: int = 50
 
+@export var shouldBounce = false
 const BULLET = preload("uid://c7uqco4biuu2g")
 var shot_cooldown_seconds = 0.35
 var time_since_last_shot = 0
@@ -83,5 +84,7 @@ func shoot(delta):
 		instance.direction = inputDir
 		
 		instance.position = position
+		
+		instance.bulletBounce = shouldBounce
 		
 		time_since_last_shot += delta

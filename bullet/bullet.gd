@@ -5,6 +5,8 @@ extends Area2D
 
 @export var direction = Vector2() # bullet direction of travel
 
+@export var bulletBounce = false
+
 var speed = 128 #The speed of the bullet
 
 var bounceCount = 0
@@ -17,7 +19,7 @@ func _on_visible_on_screen_notifier_2d_screen_exited():
 	call_deferred("queue_free")
 
 func _on_body_entered(body: Node2D) -> void:
-	if body.name != "Player":
+	if body.name != "Player" and bulletBounce == true:
 		var angle: int = int(rad_to_deg(body.get_angle_to(direction)))
 		if angle == 135:
 			if $CollisionShape2D/Left.is_colliding():
