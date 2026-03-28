@@ -1,6 +1,5 @@
-class_name ZoneManager
-extends Node2D
-## A node which manages [Zone] scenes.
+extends Node
+## An autoloaded node which manages [Zone] scenes.
 ##
 ## This node has functions to display and change out [Zone] scenes to create
 ## multiple area divisions in one world.
@@ -9,118 +8,102 @@ extends Node2D
 ## The possible zone directions.[br]
 ## [Zone] nodes use these directions to mark which direction the player goes to
 ## get to a new zone.[br]
-## For instance, the [member Zone.left_zone_location] property maps to the LEFT value.
+## For instance, the [member Zone.left_zone_location] property maps to the
+## [constant LEFT] value.[br]
+## NOTE: The [constant NONE] direction is used when there is no previous scene.
+## This indicates that no repositioning should be done in [method change_zone].
 enum ZONE_DIRECTION {
 	LEFT,
 	UP,
 	RIGHT,
 	DOWN,
+	NONE,
 }
 
-## Base file path to where the zones are located
-const ZONE_PATH: StringName = "res://world/"
 
-## The first [Zone] scene to show when [method _ready] is ran.
-@export var starting_zone: StringName
-
-
-## The player node.[br]
-## It is assumed that a [Camera2D] node will be under this node.
-## Found and set in [method _ready].
-var player: Node2D = null
-
-
-# Gets the player node, shows the starting zone, and then adjusts the camera
-func _ready() -> void:
-	# Find the player in the tree
-	player = get_parent().find_child("Player")
-	
-	# Load the starting zone (Use call_deferred to avoid weird error messages)
-	#_change_zone(null, ZONE_DIRECTION.LEFT)
-	call_deferred("_change_zone", null, ZONE_DIRECTION.LEFT)
-
-
-## Changes the current zone to the next zone, specified by [param direction] and
-## then moves the player to the position specified at the new [Zone.default_spawn].[br]
-## NOTE: When [param current_zone] is null, the [member starting_zone] scene is loaded.
-func _change_zone(current_zone: Zone, direction: ZONE_DIRECTION) -> void:
+## Changes the current zone to the next zone, specified by [param new_zone_packed]
+## and then repositions the player near the corresponding teleport in the new zone
+## based on [param direction].[br]
+## NOTE: If [param direction] is [constant NONE], then the default position, or
+## the original position of the player in the zone scene, is used.
+func change_zone(new_zone_packed: PackedScene, direction: ZONE_DIRECTION) -> void:
 	# Pause processing (avoid weird intermediate processing)
 	get_tree().paused = true
 	
-	# Get the new zone
-	var new_zone: Zone = null
-	var new_zone_filename: StringName = ""
-	
-	# If no current zone was given, then load the starting zone
-	# Otherwise, load by matching the provided direction with the current zone's properties
-	if current_zone == null:
-		new_zone_filename = starting_zone
-	else:
-		match direction:
-			# Match the direction
-			ZONE_DIRECTION.LEFT:
-				new_zone_filename = current_zone.left_zone_filename
-			ZONE_DIRECTION.UP:
-				new_zone_filename = current_zone.up_zone_filename
-			ZONE_DIRECTION.RIGHT:
-				new_zone_filename = current_zone.right_zone_filename
-			ZONE_DIRECTION.DOWN:
-				new_zone_filename = current_zone.down_zone_filename
+	# Save player effects if there was a previous zone
+	var original_effects: Dictionary
+	if direction != ZONE_DIRECTION.NONE:
+		# Get the original player from the current scene
+		var original_player: CharacterBody2D = get_tree().current_scene.find_child("Player", false)
 		
-		# Remove the existing zone
-		current_zone.queue_free()
+		# Get effects
+		original_effects = get_player_effects(original_player)
 	
-	# Instantiate and add the new zone
-	var new_zone_packed: PackedScene = load(ZONE_PATH + new_zone_filename + ".tscn")
-	new_zone = new_zone_packed.instantiate()
-	add_child(new_zone)
 	
-	# Position the new zone
-	new_zone.position = Vector2(0, 0)
+	# Instantiate and change to the new zone
+	# (NOTE: change_scene_to_node is used to keep a copy of the scene)
+	var new_zone: Zone = new_zone_packed.instantiate()
 	
-	if current_zone == null:
-		# Move the player to the default spawn position
-		player.position = new_zone.default_spawn.position
-	else:
-		# Move the player close to the opposite transition location
+	get_tree().call_deferred("change_scene_to_node", new_zone)
+	await get_tree().scene_changed
+	
+	
+	# Get the player node in the new scene
+	var player: CharacterBody2D = new_zone.find_child("Player", false)
+	
+	# Assert for debugging when a player node is not found in the new scene
+	# as assert statements are removed in production builds
+	assert(player != null, "Player node not found in the new Zone scene!")
+	
+	# Readd player effects if they were saved
+	if direction != ZONE_DIRECTION.NONE:
+		apply_player_effects(player, original_effects)
+	
+	
+	# Move the player close to the opposite transition location
+	
+	# NOTE: The CollisionShape2D node is assumed to be named "CollisionShape2D"
+	var collider_position: Vector2
+	var offset: Vector2
+	
+	# Get the collider and calculate which direction it should go in
+	match direction:
+		# Left -> Right
+		ZONE_DIRECTION.LEFT:
+			# NOTE: A 2x multiplier is used to further distance the player
+			# offset (x) = -1 * width of the CollisionShape2D
+			var collider: CollisionShape2D = new_zone.right_zone_area.find_child("CollisionShape2D")
+			collider_position = collider.position
+			offset = Vector2(-2 * collider.shape.get_rect().size.x, 0)
 		
-		# NOTE: The CollisionShape2D node is assumed to be named "CollisionShape2D"
-		var collider_position: Vector2
-		var offset: Vector2
+		# Up -> Down
+		ZONE_DIRECTION.UP:
+			# offset (y) = -1 * height of the CollisionShape2D
+			var collider: CollisionShape2D = new_zone.down_zone_area.find_child("CollisionShape2D")
+			collider_position = collider.position
+			offset = Vector2(0, -2 * collider.shape.get_rect().size.y)
 		
-		# Get the collider and calculate which direction it should go in
-		match direction:
-			# Left -> Right
-			ZONE_DIRECTION.LEFT:
-				# NOTE: A 2x multiplier is used to further distance the player
-				# offset (x) = -1 * width of the CollisionShape2D
-				var collider: CollisionShape2D = new_zone.right_zone_area.find_child("CollisionShape2D")
-				collider_position = collider.position
-				offset = Vector2(-2 * collider.shape.get_rect().size.x, 0)
-			
-			# Up -> Down
-			ZONE_DIRECTION.UP:
-				# offset (y) = -1 * height of the CollisionShape2D
-				var collider: CollisionShape2D = new_zone.down_zone_area.find_child("CollisionShape2D")
-				collider_position = collider.position
-				offset = Vector2(0, -2 * collider.shape.get_rect().size.y)
-			
-			# Right -> Left
-			ZONE_DIRECTION.RIGHT:
-				# offset (x) = width of the CollisionShape2D
-				var collider: CollisionShape2D = new_zone.left_zone_area.find_child("CollisionShape2D")
-				collider_position = collider.position
-				offset = Vector2(2 * collider.shape.get_rect().size.x, 0)
-			
-			# Down -> Up
-			ZONE_DIRECTION.DOWN:
-				# offset (y) = height of the CollisionShape2D
-				var collider: CollisionShape2D = new_zone.up_zone_area.find_child("CollisionShape2D")
-				collider_position = collider.position
-				offset = Vector2(0, 2 * collider.shape.get_rect().size.y)
+		# Right -> Left
+		ZONE_DIRECTION.RIGHT:
+			# offset (x) = width of the CollisionShape2D
+			var collider: CollisionShape2D = new_zone.left_zone_area.find_child("CollisionShape2D")
+			collider_position = collider.position
+			offset = Vector2(2 * collider.shape.get_rect().size.x, 0)
 		
-		# Set the player position (area_position + offset)
-		player.position = collider_position + offset
+		# Down -> Up
+		ZONE_DIRECTION.DOWN:
+			# offset (y) = height of the CollisionShape2D
+			var collider: CollisionShape2D = new_zone.up_zone_area.find_child("CollisionShape2D")
+			collider_position = collider.position
+			offset = Vector2(0, 2 * collider.shape.get_rect().size.y)
+		
+		# Handle NONE direction (pass through the current player position)
+		ZONE_DIRECTION.NONE:
+			collider_position = player.position
+			offset = Vector2.ZERO
+	
+	# Set the player position (area_position + offset)
+	player.position = collider_position + offset
 	
 	
 	# Adjust the camera's limits
@@ -131,14 +114,63 @@ func _change_zone(current_zone: Zone, direction: ZONE_DIRECTION) -> void:
 	# Snap the camera to the new location
 	camera.reset_smoothing()
 	
-	# Connect to the interact signal
-	new_zone.change_area_interacted.connect(_on_zone_change_area_interacted)
 	
 	# Resume processing
 	get_tree().paused = false
 
 
-## Connects to [signal Zone.change_area_interacted] and passes it to [method _change_zone].
-func _on_zone_change_area_interacted(calling_zone: Zone, direction: ZoneManager.ZONE_DIRECTION) -> void:
-	#_change_zone(calling_zone, direction)
-	call_deferred("_change_zone", calling_zone, direction)
+## Returns a [Dictionary] containing the effects that the player currently has.[br]
+## This return value can be used to add effects back onto the player via [method apply_player_effects].
+func get_player_effects(player: CharacterBody2D) -> Dictionary:
+	var effects := Dictionary()
+	
+	# Save effects saved as booleans
+	effects["BOUNCE_EFFECT"] = player.bounce_powerup
+	effects["SHOTGUN_EFFECT"] = player.shotgun_powerup
+	
+	# Save the remaining duration on these effects
+	effects["BOUNCE_REMAINING"] = player.find_child("BouncesPowerTimer").time_left
+	effects["SHOTGUN_REMAINING"] = player.find_child("ShotgunPowerTimer").time_left
+	
+	# Save effects which directly modify attributes
+	effects["RAPID_FIRE_MULTIPLIER"] = player.shot_speed_multiplier
+	effects["SPEED_MULTIPLIER"] = player.speedMulti
+	
+	return effects
+
+
+## Adds effects from the [Dictionary] output from [method get_player_effects]
+## onto the player.
+func apply_player_effects(player: CharacterBody2D, effects: Dictionary) -> void:
+	# Load effects saved as booleans
+	player.bounce_powerup = effects["BOUNCE_EFFECT"]
+	player.shotgun_powerup = effects["SHOTGUN_EFFECT"]
+	
+	# If any effects were occuring, update their remaining duration and start their timer
+	if effects["BOUNCE_EFFECT"]:
+		var timer: Timer = player.find_child("BouncesPowerTimer")
+		_restart_effect_timer(timer, effects["BOUNCE_REMAINING"])
+	
+	if effects["SHOTGUN_EFFECT"]:
+		var timer: Timer = player.find_child("ShotgunPowerTimer")
+		_restart_effect_timer(timer, effects["SHOTGUN_REMAINING"])
+	
+	# Apply modified attributes
+	player.shot_speed_multiplier = effects["RAPID_FIRE_MULTIPLIER"]
+	player.speedMulti = effects["SPEED_MULTIPLIER"]
+
+
+## Restarts the effect timer with [param remaining_time] as [member Timer.wait_time].
+## After the timer ends, the original [member Timer.wait_time] is restored.[br]
+## This is used in [method apply_player_effects] to restart effect timers.
+func _restart_effect_timer(timer: Timer, remaining_time: float) -> void:
+	var original_time := timer.wait_time
+	timer.wait_time = remaining_time
+	
+	# Use the copy of the normal duration to fix the duration
+	timer.timeout.connect(
+			func(): timer.wait_time = original_time
+	)
+	
+	# Start the timer
+	timer.start()
