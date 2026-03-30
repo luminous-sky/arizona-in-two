@@ -73,6 +73,10 @@ func _on_attack_delay_timeout() -> void:
 	var bullet2 = load("res://enemies/tumbleweed/tumble_bullet.tscn").instantiate()
 	var bullet3 = load("res://enemies/tumbleweed/tumble_bullet.tscn").instantiate()
 	
+	bullet1.originalPosition = position
+	bullet2.originalPosition = position
+	bullet3.originalPosition = position
+	
 	bullet1.position = position
 	bullet2.position = position
 	bullet3.position = position
