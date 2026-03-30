@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-@export var speed: float = 300.0
+@export var speed: float = 500.0
 
 @export var attackDmg: float = 15.0
 
@@ -33,7 +33,7 @@ func _physics_process(delta: float) -> void:
 			
 		velocity = speed * targetAngle * delta
 		targetAngle = [Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT, Vector2.UP][randi_range(0,3)]
-		timer.wait_time = randf_range(0.1, 5.0)
+		timer.wait_time = randf_range(10.0, 15.0)
 		timer.start()
 		canMove = true
 		shouldMove = false
