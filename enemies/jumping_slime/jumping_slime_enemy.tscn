@@ -1,0 +1,116 @@
+[gd_scene format=3 uid="uid://c1vqdg3iq4258"]
+
+[ext_resource type="Script" uid="uid://civ55pgp0fxs6" path="res://enemies/jumping_slime/jumping_slime_enemy.gd" id="1_1ynn2"]
+[ext_resource type="Texture2D" uid="uid://dq3avqf8vlk6r" path="res://assets/temporary-tiles/programmer_art-objects.png" id="2_x2kra"]
+[ext_resource type="PackedScene" uid="uid://c7fw2aq587t44" path="res://enemies/damage_component.tscn" id="3_vx467"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_12qxq"]
+atlas = ExtResource("2_x2kra")
+region = Rect2(112, 80, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_lwubp"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_12qxq")
+}],
+"loop": true,
+"name": &"down",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_12qxq")
+}],
+"loop": true,
+"name": &"down_idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_12qxq")
+}],
+"loop": true,
+"name": &"left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_12qxq")
+}],
+"loop": true,
+"name": &"left_idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_12qxq")
+}],
+"loop": true,
+"name": &"right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_12qxq")
+}],
+"loop": true,
+"name": &"right_idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_12qxq")
+}],
+"loop": true,
+"name": &"up",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_12qxq")
+}],
+"loop": true,
+"name": &"up_idle",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yr4wy"]
+size = Vector2(14, 12)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_12qxq"]
+radius = 50.0
+
+[node name="JumpingSlimeEnemy" type="CharacterBody2D" unique_id=538334106]
+motion_mode = 1
+script = ExtResource("1_1ynn2")
+
+[node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="." unique_id=1164723496]
+rect = Rect2(-12, -12, 24, 24)
+
+[node name="IdleMovementTimer" type="Timer" parent="." unique_id=2067376123]
+wait_time = 2.5
+one_shot = true
+
+[node name="UniqueAttackTimer" type="Timer" parent="." unique_id=641998772]
+wait_time = 5.0
+one_shot = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1390256038]
+sprite_frames = SubResource("SpriteFrames_lwubp")
+animation = &"down"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=561916679]
+position = Vector2(0, 1)
+shape = SubResource("RectangleShape2D_yr4wy")
+
+[node name="DamageComponent" parent="." unique_id=1495931984 instance=ExtResource("3_vx467")]
+health = 40.0
+
+[node name="ChaseArea" type="Area2D" parent="." unique_id=1294927946]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ChaseArea" unique_id=1944958268]
+shape = SubResource("CircleShape2D_12qxq")
+
+[connection signal="screen_exited" from="VisibleOnScreenEnabler2D" to="." method="_on_visible_on_screen_enabler_2d_screen_exited"]
+[connection signal="timeout" from="IdleMovementTimer" to="." method="_on_idle_movement_timer_timeout"]
