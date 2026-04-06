@@ -5,8 +5,11 @@
 [ext_resource type="PackedScene" uid="uid://tauxm8sc6ng2" path="res://player/player.tscn" id="3_kb47g"]
 [ext_resource type="PackedScene" uid="uid://ctphcsxh0fik4" path="res://enemies/slime_enemy.tscn" id="4_yayhr"]
 [ext_resource type="PackedScene" uid="uid://bufa3nu78h2f7" path="res://powerups/rapid_fire/rapid_fire.tscn" id="5_hn3bc"]
+[ext_resource type="PackedScene" uid="uid://c4kv058u3oyf5" path="res://enemies/tumbleweed/tumbleweed_enemy.tscn" id="5_jvwit"]
+[ext_resource type="PackedScene" uid="uid://b883ik2jdt2jl" path="res://enemies/dashingSlime/dashingSlime_enemy.tscn" id="6_7taq6"]
 [ext_resource type="PackedScene" uid="uid://ukvstgcvpp0c" path="res://powerups/sped_boost/speed_boost.tscn" id="6_jvwit"]
 [ext_resource type="PackedScene" uid="uid://b1npi0iamldqa" path="res://powerups/bullet_bounce/bullet_bounce.tscn" id="7_7taq6"]
+[ext_resource type="PackedScene" uid="uid://c1vqdg3iq4258" path="res://enemies/jumping_slime/jumping_slime_enemy.tscn" id="10_jvwit"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_dg7gj"]
 texture = ExtResource("2_dg7gj")
@@ -220,6 +223,15 @@ position_smoothing_speed = 4.0
 
 [node name="SlimeEnemy" parent="." unique_id=538334106 instance=ExtResource("4_yayhr")]
 position = Vector2(317, 198)
+
+[node name="JumpingSlimeEnemy" parent="." unique_id=24699548 instance=ExtResource("10_jvwit")]
+position = Vector2(581, 242)
+
+[node name="Tumbleweed Enemy" parent="." unique_id=990065551 instance=ExtResource("5_jvwit")]
+position = Vector2(96, 230)
+
+[node name="DashingSlimeEnemy" parent="." unique_id=1767916205 instance=ExtResource("6_7taq6")]
+position = Vector2(426, 304)
 
 [node name="rapid_fire_pickup_range" parent="." unique_id=1345856180 instance=ExtResource("5_hn3bc")]
 position = Vector2(338, 241)
