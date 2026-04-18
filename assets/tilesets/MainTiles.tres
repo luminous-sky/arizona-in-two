@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://cs6fp0sjky41q" path="res://assets/tilesets/grass_area/grass_terrain.png" id="1_faseo"]
 [ext_resource type="Texture2D" uid="uid://dcrg1lgshthv0" path="res://assets/tilesets/ice_area/ice_terrain.png" id="2_iugvd"]
 [ext_resource type="Texture2D" uid="uid://dqvaigx2nv7to" path="res://assets/tilesets/magma_area/magma_terrain.png" id="3_gaw6i"]
+[ext_resource type="Texture2D" uid="uid://nl8234om3bpc" path="res://assets/tilesets/desert_area/Sand_terrain.png" id="4_iugvd"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_voidx"]
 texture = ExtResource("1_faseo")
@@ -130,8 +131,38 @@ texture = ExtResource("3_gaw6i")
 7:6/0 = 0
 8:6/0 = 0
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_gaw6i"]
+texture = ExtResource("4_iugvd")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+4:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+4:1/0 = 0
+6:1/0 = 0
+7:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+4:2/0 = 0
+6:2/0 = 0
+7:2/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+3:4/0 = 0
+6:4/0 = 0
+7:4/0 = 0
+0:5/0 = 0
+1:5/0 = 0
+4:5/0 = 0
+6:5/0 = 0
+7:5/0 = 0
+
 [resource]
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_voidx")
 sources/1 = SubResource("TileSetAtlasSource_y5yvy")
 sources/2 = SubResource("TileSetAtlasSource_7qhk5")
+sources/3 = SubResource("TileSetAtlasSource_gaw6i")

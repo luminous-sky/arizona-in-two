@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=4 uid="uid://crkbeymka6a7q"]
+[gd_scene format=4 uid="uid://crkbeymka6a7q"]
 
 [ext_resource type="Script" uid="uid://4xihhr7r6pek" path="res://world/zone.gd" id="1_jfnnh"]
 [ext_resource type="Texture2D" uid="uid://cy7gy5nqg8hwh" path="res://assets/temporary-tiles/programmer_art-terrain.png" id="2_46b4w"]
