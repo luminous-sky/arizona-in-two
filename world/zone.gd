@@ -16,7 +16,7 @@ extends Node2D
 
 
 ## Base file path to where the zones are located.
-const ZONE_PATH: StringName = "res://world/"
+@export var ZONE_PATH: StringName = "res://world/"
 
 
 # These directions identify which direction the scene change goes in

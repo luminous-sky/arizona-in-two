@@ -444,6 +444,7 @@ size = Vector2(16, 64)
 
 [node name="ZoneDesertB" type="Node2D" unique_id=1052487403 node_paths=PackedStringArray("left_zone_area", "up_zone_area", "right_zone_area")]
 script = ExtResource("1_pkhdo")
+ZONE_PATH = &"res://world/desert_area/"
 left_zone_filename = &"desert_C"
 left_zone_area = NodePath("LeftArea2D")
 up_zone_filename = &"desert_D"

@@ -383,6 +383,7 @@ size = Vector2(64, 16)
 
 [node name="ZoneDesertA" type="Node2D" unique_id=1774536125 node_paths=PackedStringArray("left_zone_area", "down_zone_area")]
 script = ExtResource("1_wyvno")
+ZONE_PATH = &"res://world/desert_area/"
 left_zone_filename = &"desert_B"
 left_zone_area = NodePath("LeftArea2D")
 down_zone_filename = &"zone_one"
