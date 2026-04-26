@@ -34,6 +34,7 @@ window/stretch/mode="viewport"
 [global_group]
 
 player="player scene"
+Player="player scene, converted from original scene group"
 
 [input]
 

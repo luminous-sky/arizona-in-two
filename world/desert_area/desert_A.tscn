@@ -386,7 +386,7 @@ script = ExtResource("1_wyvno")
 ZONE_PATH = &"res://world/desert_area/"
 left_zone_filename = &"desert_B"
 left_zone_area = NodePath("LeftArea2D")
-down_zone_filename = &"zone_one"
+down_zone_filename = &"../zone_one"
 down_zone_area = NodePath("DownArea2D")
 
 [node name="BackgroundTileMapLayer" type="TileMapLayer" parent="." unique_id=327762525]
