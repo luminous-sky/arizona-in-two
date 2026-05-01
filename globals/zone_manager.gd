@@ -35,6 +35,7 @@ var modified_zones: Dictionary[StringName, Zone]
 func change_zone(new_zone_packed: PackedScene, direction: ZONE_DIRECTION, spawnpoint : Vector2) -> void:
 	# Pause processing (avoid weird intermediate processing)
 	get_tree().paused = true
+	print("you've changed zones")
 	
 	# Save player effects if there was a previous zone
 	var original_effects: Dictionary
