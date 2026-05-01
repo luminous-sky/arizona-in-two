@@ -27,21 +27,29 @@ extends Node2D
 @export var left_zone_filename: StringName
 ## The interaction area for the zone to the [b]left[/b] of this zone.
 @export var left_zone_area: Area2D
+## Left spawnpoint variable. Coordinate
+@export var left_spawn_point : Vector2
 
 ## The filename for the zone [b]above[/b] this zone.
 @export var up_zone_filename: StringName
 ## The interaction area for the zone [b]above[/b] this zone.
 @export var up_zone_area: Area2D
+## Up spawnpoint variable. Coordinate
+@export var up_spawn_point : Vector2
 
 ## The filename of for the zone to the [b]right[/b] of this zone.
 @export var right_zone_filename: StringName
 ## The interaction area for the zone to the [b]right[/b] of this zone.
 @export var right_zone_area: Area2D
+## Right spawnpoint variable. Coordinate
+@export var right_spawn_point : Vector2
 
 ## The filename for the zone [b]below[/b] this zone.
 @export var down_zone_filename: StringName
 ## The interaction area for the zone [b]below[/b] this zone.
 @export var down_zone_area: Area2D
+## Down spawnpoint variable. Coordinate
+@export var down_spawn_point : Vector2
 
 
 # The background TileMapLayer.
@@ -103,21 +111,26 @@ func _on_area_2d_body_entered(body: Node2D, direction: ZoneManager.ZONE_DIRECTIO
 		return
 	
 	# Get the filename for the next scene (Zone)
-	var new_zone_filename: StringName = ""
+	var new_zone_filename : StringName = ""
+	var new_spawnpoint : Vector2 = Vector2.ZERO
 	
 	match direction:
 		# Match the direction (ignore NONE)
 		ZoneManager.ZONE_DIRECTION.LEFT:
 			new_zone_filename = left_zone_filename
+			new_spawnpoint = left_spawn_point
 		ZoneManager.ZONE_DIRECTION.UP:
 			new_zone_filename = up_zone_filename
+			new_spawnpoint = up_spawn_point
 		ZoneManager.ZONE_DIRECTION.RIGHT:
 			new_zone_filename = right_zone_filename
+			new_spawnpoint = right_spawn_point
 		ZoneManager.ZONE_DIRECTION.DOWN:
 			new_zone_filename = down_zone_filename
+			new_spawnpoint = down_spawn_point
 	
 	# Load a PackedScene version of the next zone
 	var new_zone_packed: PackedScene = load(ZONE_PATH + new_zone_filename + ".tscn")
-	
+	print(self, direction)
 	# Call the _change_zone function directly
-	ZoneManager.change_zone(new_zone_packed, direction)
+	ZoneManager.change_zone(new_zone_packed, direction, new_spawnpoint)
