@@ -3,7 +3,7 @@ extends Control
 func _on_start_pressed() -> void:
 	var game: PackedScene = load("uid://bvhckihcs8a5l")
 	# Use change_zone to also fix the camera to the map's bounds
-	ZoneManager.change_zone(game, ZoneManager.ZONE_DIRECTION.NONE)
+	ZoneManager.change_zone(game, ZoneManager.ZONE_DIRECTION.NONE, Vector2(288,357))
 	#SceneSwitcher.switch_scene(game)
 
 func _on_settings_pressed() -> void:

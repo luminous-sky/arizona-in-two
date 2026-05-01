@@ -32,7 +32,7 @@ var modified_zones: Dictionary[StringName, Zone]
 ## based on [param direction].[br]
 ## NOTE: If [param direction] is [constant NONE], then the default position, or
 ## the original position of the player in the zone scene, is used.
-func change_zone(new_zone_packed: PackedScene, direction: ZONE_DIRECTION) -> void:
+func change_zone(new_zone_packed: PackedScene, direction: ZONE_DIRECTION, spawnpoint : Vector2) -> void:
 	# Pause processing (avoid weird intermediate processing)
 	get_tree().paused = true
 	print("you've changed zones")
@@ -79,6 +79,9 @@ func change_zone(new_zone_packed: PackedScene, direction: ZONE_DIRECTION) -> voi
 	# Get the player node in the new scene
 	var player: CharacterBody2D = new_zone.find_child("Player", false)
 	
+	## Set the player position (area_position + offset)
+	player.position = spawnpoint
+	
 	# Assert for debugging when a player node is not found in the new scene
 	# as assert statements are removed in production builds
 	assert(player != null, "Player node not found in the new Zone scene!")
@@ -93,45 +96,43 @@ func change_zone(new_zone_packed: PackedScene, direction: ZONE_DIRECTION) -> voi
 	# NOTE: The CollisionShape2D node is assumed to be named "CollisionShape2D"
 	var collider_position: Vector2
 	var offset: Vector2
-	
-	# Get the collider and calculate which direction it should go in
-	match direction:
-		# Left -> Right
-		ZONE_DIRECTION.LEFT:
-			# NOTE: A 2x multiplier is used to further distance the player
-			# offset (x) = -1 * width of the CollisionShape2D
-			var collider: CollisionShape2D = new_zone.right_zone_area.find_child("CollisionShape2D")
-			collider_position = collider.position
-			offset = Vector2(-2 * collider.shape.get_rect().size.x, 0)
-		
-		# Up -> Down
-		ZONE_DIRECTION.UP:
-			# offset (y) = -1 * height of the CollisionShape2D
-			var collider: CollisionShape2D = new_zone.down_zone_area.find_child("CollisionShape2D")
-			collider_position = collider.position
-			offset = Vector2(0, -2 * collider.shape.get_rect().size.y)
-		
-		# Right -> Left
-		ZONE_DIRECTION.RIGHT:
-			# offset (x) = width of the CollisionShape2D
-			var collider: CollisionShape2D = new_zone.left_zone_area.find_child("CollisionShape2D")
-			collider_position = collider.position
-			offset = Vector2(2 * collider.shape.get_rect().size.x, 0)
-		
-		# Down -> Up
-		ZONE_DIRECTION.DOWN:
-			# offset (y) = height of the CollisionShape2D
-			var collider: CollisionShape2D = new_zone.up_zone_area.find_child("CollisionShape2D")
-			collider_position = collider.position
-			offset = Vector2(0, 2 * collider.shape.get_rect().size.y)
-		
-		# Handle NONE direction (pass through the current player position)
-		ZONE_DIRECTION.NONE:
-			collider_position = player.position
-			offset = Vector2.ZERO
-	
-	# Set the player position (area_position + offset)
-	player.position = collider_position + offset
+	#
+	## Get the collider and calculate which direction it should go in
+	#match direction:
+		## Left -> Right
+		#ZONE_DIRECTION.LEFT:
+			## NOTE: A 2x multiplier is used to further distance the player
+			## offset (x) = -1 * width of the CollisionShape2D
+			#var collider: CollisionShape2D = new_zone.right_zone_area.find_child("CollisionShape2D")
+			#collider_position = collider.position
+			#offset = Vector2(-2 * collider.shape.get_rect().size.x, 0)
+		#
+		## Up -> Down
+		#ZONE_DIRECTION.UP:
+			## offset (y) = -1 * height of the CollisionShape2D
+			#var collider: CollisionShape2D = new_zone.down_zone_area.find_child("CollisionShape2D")
+			#collider_position = collider.position
+			#offset = Vector2(0, -2 * collider.shape.get_rect().size.y)
+		#
+		## Right -> Left
+		#ZONE_DIRECTION.RIGHT:
+			## offset (x) = width of the CollisionShape2D
+			#var collider: CollisionShape2D = new_zone.left_zone_area.find_child("CollisionShape2D")
+			#collider_position = collider.position
+			#offset = Vector2(2 * collider.shape.get_rect().size.x, 0)
+		#
+		## Down -> Up
+		#ZONE_DIRECTION.DOWN:
+			## offset (y) = height of the CollisionShape2D
+			#var collider: CollisionShape2D = new_zone.up_zone_area.find_child("CollisionShape2D")
+			#collider_position = collider.position
+			#offset = Vector2(0, 2 * collider.shape.get_rect().size.y)
+		#
+		## Handle NONE direction (pass through the current player position)
+		#ZONE_DIRECTION.NONE:
+			#collider_position = player.position
+			#offset = Vector2.ZERO
+	#
 	
 	
 	# Adjust the camera's limits
@@ -142,7 +143,7 @@ func change_zone(new_zone_packed: PackedScene, direction: ZONE_DIRECTION) -> voi
 	# Snap the camera to the new location
 	camera.reset_smoothing()
 	
-	
+	print('end of switch')
 	# Resume processing
 	get_tree().paused = false
 

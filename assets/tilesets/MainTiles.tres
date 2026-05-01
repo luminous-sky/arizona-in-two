@@ -6,6 +6,9 @@
 [ext_resource type="Texture2D" uid="uid://nl8234om3bpc" path="res://assets/tilesets/desert_area/Sand_terrain.png" id="4_iugvd"]
 [ext_resource type="Texture2D" uid="uid://cy7gy5nqg8hwh" path="res://assets/temporary-tiles/programmer_art-terrain.png" id="5_gaw6i"]
 
+[sub_resource type="TileMapPattern" id="TileMapPattern_iugvd"]
+tile_data = PackedInt32Array(0, 262145, 2, 65536, 262145, 3, 1, 327681, 2, 65537, 327681, 3)
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_voidx"]
 texture = ExtResource("1_faseo")
 0:0/0 = 0
@@ -295,3 +298,4 @@ sources/1 = SubResource("TileSetAtlasSource_y5yvy")
 sources/2 = SubResource("TileSetAtlasSource_7qhk5")
 sources/3 = SubResource("TileSetAtlasSource_gaw6i")
 sources/4 = SubResource("TileSetAtlasSource_laruj")
+pattern_0 = SubResource("TileMapPattern_iugvd")
